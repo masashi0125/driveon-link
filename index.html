@@ -7,14 +7,34 @@
   <script>
     window.onload = function () {
       const deeplink = "driveon://navigate?from=tokyo&to=osaka";
+      const storeUrl = {
+        ios: "https://apps.apple.com/jp/app/idXXXXXXXXX",  // App Store URL
+        android: "https://play.google.com/store/apps/details?id=com.example.driveon"  // Google Play URL
+      };
+      
+      // タイムアウトでディープリンクを試行
       setTimeout(() => {
         window.location.href = deeplink;
       }, 100);
+      
+      // 10秒後にアプリが開かなかった場合、ストアにリダイレクト
+      setTimeout(() => {
+        // UserAgentでOSを判別してストアにリダイレクト
+        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+        const isAndroid = /Android/i.test(navigator.userAgent);
+
+        if (isIOS) {
+          window.location.href = storeUrl.ios;
+        } else if (isAndroid) {
+          window.location.href = storeUrl.android;
+        }
+      }, 10000); // 10秒後
     };
   </script>
 </head>
 <body>
   <h2>DriveOnアプリを開いています...</h2>
-  <p>自動で開かない場合は <a href="driveon://navigate?from=tokyo&to=osaka">こちらをタップ</a> してください。</p>
+  <p>自動で開かない場合は、以下のリンクをタップしてください。</p>
+  <p><a href="driveon://navigate?from=tokyo&to=osaka">アプリを開く</a></p>
 </body>
 </html>
